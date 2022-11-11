@@ -1,0 +1,114 @@
+1. How would you describe the concept of "state"?
+A way for React to remember saved values from within a component.
+This is similar to declaring variables from within a component,
+with a few added bonuses (which we'll get to later)
+
+
+2. When would you want to use props instead of state?
+Anytime you want to pass data into a component so that
+component can determine what will get displayed on the
+screen.
+
+
+3. When would you want to use state instead of props?
+Anytime you want a component to maintain some values from
+within the component. (And "remember" those values even
+when React re-renders the component).
+
+
+4. What does "immutable" mean? Are props immutable? Is state immutable?
+Unchanging. Props are immutable. State is mutable.
+-------------------------------------------------------------------------
+Note: if we ever need the old value of state
+to help us to  determine the new value of state,
+we should pass a callback function to our
+state setter function instead of using
+state directly. This callback function will
+receive the old value of state as its parameter,
+which we can then use to determine your new
+value of state.
+-------------------------------------------------------------------------
+
+1. You have 2 options for what you can pass in to a
+   state setter function (e.g. `setCount`). What are they?
+   
+a. New value of state (setCount(42))
+b. Callback function - whatever the callback function 
+   returns === new value of state
+
+
+2. When would you want to pass the first option (from answer
+   above) to the state setter function?
+Whenever you don't need the previous value of state to determine
+what the new value of state should be.
+
+
+3. When would you want to pass the second option (from answer
+   above) to the state setter function?
+Whenever you DO need the previous value to determine the new value
+---------------------------------------------------------------------------------
+                  How to use state on array in a component
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+function App() {
+    const [thingsArray, setThingsArray] = React.useState(["Thing 1", "Thing 2"])
+    
+    function addItem() {
+        setThingsArray(prevState => {
+            return [...prevState, `Thing ${prevState.length + 1}`]
+        })
+    }
+    
+    const thingsElements = thingsArray.map(thing => <p key={thing}>{thing}</p>)
+    
+    return (
+        <div>
+            <button onClick={addItem}>Add Item</button>
+            {thingsElements}
+        </div>
+    )
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
+---------------------------------------------------------------------------------
+                use state with object in component
+import React from 'react'
+
+export default function Card() {
+  const [contact, setContact] = React.useState({
+    firstName: 'John',
+    lastName: 'Doe',
+    phone: '+1 (719) 555-1212',
+    email: 'itsmyrealname@example.com',
+    isFavorite: true,
+  })
+
+  let starIcon = contact.isFavorite ? 'star-filled.png' : 'star-empty.png'
+
+  function toggleFavorite() {
+    console.log('Toggle Favorite')
+  }
+
+  return (
+    <main>
+      <article className="card">
+        <img src="./image/user.png" className="card--image" alt="imgCard" />
+        <div className="card--info">
+          <img
+            src={`../image/${starIcon}`}
+            className="card--favorite"
+            onClick={toggleFavorite}
+            alt="star"
+          />
+          <h2 className="card--name">
+            {contact.firstName} {contact.lastName}
+          </h2>
+          <p className="card--contact">{contact.phone}</p>
+          <p className="card--contact">{contact.email}</p>
+        </div>
+      </article>
+    </main>
+  )
+}
