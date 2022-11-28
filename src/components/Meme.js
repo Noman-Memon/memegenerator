@@ -5,26 +5,46 @@ export default function Meme() {
   // function handleonMouseOver(){
   //   console.log("Mouse Hovered")
   // }
-  const [url, setUrl] = React.useState('')
-  let imgUrl
-  function getMemeImage() {
-    const memesArray = memesData.data.memes
+  const [meme, setMeme] = React.useState({
+    topText: "",
+    bottomText: "",
+    randomImage: "http://i.imgflip.com/1bij.jpg" 
+})
+function handlechange(event){
+  const {name, value} = event.target
+  setMeme(prevMeme=>({
+    ...prevMeme,
+    [name]:value
+  }))
+}
+console.log(meme)
+const [allMemeImages, setAllMemeImages] = React.useState(memesData)
+
+
+function getMemeImage() {
+    const memesArray = allMemeImages.data.memes
     const randomNumber = Math.floor(Math.random() * memesArray.length)
-    imgUrl = memesArray[randomNumber].url
-    setUrl(function (url) {
-      return imgUrl
-    })
-    console.log(url)
-  }
+    const url = memesArray[randomNumber].url
+    setMeme(prevMeme => ({
+        ...prevMeme,
+        randomImage: url
+    }))
+    
+}
+console.log(meme)
   return (
     <main>
       <div className="form">
-        <input type="text" placeholder="Top text" className="form--input" />
-        <input type="text" placeholder="Bottom text" className="form--input" />
+        <input type="text" placeholder="Top text" onChange={handlechange} className="form--input" name='topText' value={meme.topText}/>
+        <input type="text" placeholder="Bottom text" onChange={handlechange} className="form--input" name='bottomText' value={meme.bottomText}/>
         <button onClick={getMemeImage} className="form--button">
           Get a new meme image 🖼
         </button>
-        <img src={url} className="meme--image" alt="meme-img" />
+        <div className="meme">
+                <img src={meme.randomImage} className="meme--image" alt='meme' />
+                <h2 className="meme--text top">{meme.topText}</h2>
+                <h2 className="meme--text bottom">{meme.bottomText}</h2>
+            </div>
       </div>
     </main>
   )
