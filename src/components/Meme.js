@@ -1,5 +1,5 @@
 import React from 'react'
-import memesData from '../memesData'
+// import memesData from '../memesData'
 
 export default function Meme() {
   // function handleonMouseOver(){
@@ -18,20 +18,29 @@ function handlechange(event){
   }))
 }
 console.log(meme)
-const [allMemeImages, setAllMemeImages] = React.useState(memesData)
+// const [allMemeImages, setAllMemeImages] = React.useState(memesData)
+const [allMemeImages, setAllMemeImages] = React.useState([])
 
+React.useEffect(()=>{
+  async function getMemes(){
+    const res = await fetch("https://api.imgflip.com/get_memes")
+    const data = await res.json()
+    setAllMemeImages(data.data.memes)
+  }
+  getMemes()
+
+}, [])
+console.log(allMemeImages)
 
 function getMemeImage() {
-    const memesArray = allMemeImages.data.memes
-    const randomNumber = Math.floor(Math.random() * memesArray.length)
-    const url = memesArray[randomNumber].url
+    const randomNumber = Math.floor(Math.random() * allMemeImages.length)
+    const url = allMemeImages[randomNumber].url
     setMeme(prevMeme => ({
         ...prevMeme,
         randomImage: url
     }))
     
 }
-console.log(meme)
   return (
     <main>
       <div className="form">
